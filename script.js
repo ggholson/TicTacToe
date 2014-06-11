@@ -5,7 +5,6 @@ var counter = 0;
 var cpuTurn = false;
 
 function getSquare(sq) {
-
     return $('#sq' + sq).html();
 }
 
@@ -57,7 +56,81 @@ function winLogic() {
 
 }
 
+function xo(str) {
+    var count = 0;
+    var arr = [];
 
+    arr = str.split('');
+    for (i = 0; i < 3; i++) {
+        if (arr[i] === 'X') count += 1;
+        else if (arr[i] === 'O') count -= 1;
+    }
+
+    return count;
+}
+
+function cpuCheck(s1, s2, s3) {
+    if (xo(getRow(s1, s2, s3)) === 2) {
+        if (getSquare(s1) === '') {
+            $('#sq' + s1).html('O');
+            return true;
+        } else if (getSquare(s2) === '') {
+            $('#sq' + s2).html('O');
+            return true;
+        } else if (getSquare(s3) === '') {
+            $('#sq' + s3).html('O');
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+function cpuLogic() {
+
+    if (cpuCheck(1, 2, 3)) {
+        return;
+    } else if (cpuCheck(1, 4, 7)) {
+        return;
+    } else if (cpuCheck(1, 5, 9)) {
+        return;
+    } else if (cpuCheck(2, 5, 8)) {
+        return;
+    } else if (cpuCheck(3, 6, 9)) {
+        return;
+    } else if (cpuCheck(3, 5, 7)) {
+        return;
+    } else if (cpuCheck(4, 5, 6)) {
+        return;
+    } else if (cpuCheck(7, 8, 9)) {
+        return;
+    } else {
+        if (getSquare(5) === '') {
+            $('#sq5').html('O');
+        } else {
+            if (getSquare(1) === 'X' && getSquare(7) === 'X') {
+                $('#sq4').html('O');
+            } else if (getSquare(3) === 'X' && getSquare(9) === 'X') {
+                $('#sq6').html('O');
+            } else {
+                for (i = 1; i < 10; i += 2) {
+                    if (getSquare(i) === '') {
+                        $('#sq' + i).html('O');
+                        return;
+                    }
+                }
+                for (i = 2; i < 9; i += 2) {
+                    if (getSquare(i) === '') {
+                        $('#sq' + i).html('O');
+                        return;
+                    }
+                }
+            }
+        }
+
+
+    }
+}
 
 $(document).ready(function() {
 
@@ -66,13 +139,21 @@ $(document).ready(function() {
 
         if (win === true) {
             turn = "";
-        }
+        } else {
 
-        if ($(this).html() === "") {
-            $(this).html(turn);
-            change = true;
-            counter++;
-        } else change = false;
+
+
+            if ($(this).html() === "") {
+                $(this).html(turn);
+                change = true;
+                counter++;
+                winLogic();
+                cpuLogic();
+                counter++;
+                change = true;
+            } else change = false;
+
+        }
 
         if (win === false) {
             winLogic();
@@ -97,6 +178,7 @@ $(document).ready(function() {
         $('#sq8').html('');
         $('#sq9').html('');
         win = false;
+        cpuTurn = false;
         counter = 0;
         turn = 'X';
         $('button').css('opacity', '0');
